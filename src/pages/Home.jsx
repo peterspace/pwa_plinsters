@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { leadEvent, purchaseEvent } from "../utils/FacebookAppEvents";
 
 //http://localhost:5173/purchase/123/user245
+//test
 const Home = () => {
   const params = useParams();
   const { event, client_ip_address, fbclid, external_id } = params;
