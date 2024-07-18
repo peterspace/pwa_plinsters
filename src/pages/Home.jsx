@@ -64,11 +64,11 @@ const Home = () => {
   //https://1xlite-567488.top/en/registration?type=fast
   //bg-[#205583]
 
-  useEffect(() => {
-    if (!isLoading) {
-      logIn();
-    }
-  }, [isLoading]);
+  // useEffect(() => {
+  //   if (!isLoading) {
+  //     logIn();
+  //   }
+  // }, [isLoading]);
 
   async function logIn() {
     let newUrl = backend;
@@ -83,6 +83,7 @@ const Home = () => {
         // registration successful
         setUserId(response.data.userId);
         setRedirectUrl(response.data.url);
+        setIsLoading(false);
       }
     } catch (error) {
       // alert("Lead error");
@@ -99,6 +100,7 @@ const Home = () => {
     if (userId && redirectUrl) {
       // stor user to local storage
       window.location.replace(redirectUrl);
+      setRedirectUrl("");
     }
   }
 
@@ -109,24 +111,27 @@ const Home = () => {
     >
       <div className="flex flex-row justify-center items-center text-2xl text-white font-bold">
         <div className="flex flex-col gap-4 items-start justify-start text-[18px]">
-          {!isLoading && !userId && !redirectUrl && (
-            <div className="w-fit text-center text-white font-semibold inline-block rounded-lg px-3 py-1 bg-[#1F4872]">
-              {" "}
-              something went wrong ...
-            </div>
-          )}
-
           {isLoading && !userId && !redirectUrl && (
             <div className="w-fit text-center text-white font-semibold inline-block rounded-lg px-3 py-1 bg-[#1F4872]">
-              {" "}
-              Loading ...
+              loading ...
             </div>
           )}
 
-          {!isLoading && userId && !redirectUrl && (
-            <div className="w-fit text-center text-white font-semibold inline-block rounded-lg px-3 py-1 bg-[#1F4872]">
-              {" "}
-              please wait ...
+          {!isLoading && !userId && !redirectUrl && (
+            <div
+              className="cursor-pointer hover:opacity-90 w-fit text-center text-white font-semibold inline-block rounded-lg px-3 py-1 bg-[#1F4872]"
+              onClick={logIn}
+            >
+              Launch
+            </div>
+          )}
+
+          {userId && !redirectUrl && (
+            <div
+              className="cursor-pointer hover:opacity-90 w-fit text-center text-white font-semibold inline-block rounded-lg px-3 py-1 bg-[#1F4872]"
+              onClick={logIn}
+            >
+              Launch
             </div>
           )}
         </div>
