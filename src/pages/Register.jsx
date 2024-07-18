@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
-// testing redirect
-//production build: yarn preview
-//ttp://localhost:4173/
+import { useParams } from "react-router-dom";
 
 const backend = import.meta.env.VITE_BACKEND_URL;
 // const backend = "http://localhost:4000";
-const homeLink = import.meta.env.VITE_FRONTEND_URL;
 
-const Home = () => {
+const Register = () => {
+  const params = useParams();
+  const { sub_id_1, sub_id_2 } = params;
+  // const [userId, setUserId] = useState("");
   const [redirectUrl, setRedirectUrl] = useState("");
+
   const userIdL = localStorage.getItem("userId")
     ? JSON.parse(localStorage.getItem("userId"))
     : 1;
@@ -26,30 +26,14 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
+  console.log({ params });
   console.log({ userId });
   console.log({ redirectUrl });
   console.log({ errorMessage });
 
-  const landingPageEvent = () => {
-    window.fbq("track", "HomePage");
+  const registrationPageEvent = () => {
+    window.fbq("track", "RegistrationPage");
   };
-
-  useEffect(() => {
-    landingPageEvent();
-  }, []);
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     redirectUser();
-  //   }, 3000);
-  // });
-  // async function redirectUser() {
-  //   window.location.replace("https://www.apple.com/app-store/");
-  // }
-
-  async function redirectHome() {
-    window.location.replace(homeLink);
-  }
 
   useEffect(() => {
     setTimeout(() => {
@@ -59,28 +43,33 @@ const Home = () => {
     }, 300);
   });
 
-  //https://x.com/?lang=en
-  //https://1xlite-567488.top/en
-  //https://1xlite-567488.top/en/registration?type=fast
-  //bg-[#205583]
-
   useEffect(() => {
     if (!isLoading) {
-      logIn();
+      signUp();
     }
   }, [isLoading]);
 
-  async function logIn() {
-    let newUrl = backend;
-    if (userId && userId !== "1") {
-      newUrl = `${backend}/?user_id=${userId}`;
+  async function signUp() {
+    let newUrl = "";
+
+    if (sub_id_1 && sub_id_2) {
+      newUrl = `${backend}/register/?sub_id_1=${sub_id_1}&sub_id_2=${sub_id_1}`;
     }
+    if (sub_id_1 && !sub_id_2) {
+      newUrl = `${backend}/register/?sub_id_1=${sub_id_1}`;
+    }
+
+    if (!sub_id_1 && !sub_id_2) {
+      newUrl = `${backend}/register`;
+    }
+
     console.log({ newUrl });
     try {
       const response = await axios.get(newUrl);
 
       if (response.data) {
         // registration successful
+        registrationPageEvent(); // facebook event
         setUserId(response.data.userId);
         setRedirectUrl(response.data.url);
       }
@@ -109,24 +98,23 @@ const Home = () => {
     >
       <div className="flex flex-row justify-center items-center text-2xl text-white font-bold">
         <div className="flex flex-col gap-4 items-start justify-start text-[18px]">
-          {!isLoading && !userId && !redirectUrl && (
-            <div className="w-fit text-center text-white font-semibold inline-block rounded-lg px-3 py-1 bg-[#1F4872]">
-              {" "}
-              something went wrong ...
-            </div>
-          )}
-
           {isLoading && !userId && !redirectUrl && (
             <div className="w-fit text-center text-white font-semibold inline-block rounded-lg px-3 py-1 bg-[#1F4872]">
               {" "}
-              Loading ...
+              Registration in progress ...
             </div>
           )}
 
           {!isLoading && userId && !redirectUrl && (
             <div className="w-fit text-center text-white font-semibold inline-block rounded-lg px-3 py-1 bg-[#1F4872]">
               {" "}
-              please wait ...
+              something went wrong ...
+            </div>
+          )}
+          {isLoading && !userId && !redirectUrl && (
+            <div className="w-fit text-center text-white font-semibold inline-block rounded-lg px-3 py-1 bg-[#1F4872]">
+              {" "}
+              processing ...
             </div>
           )}
         </div>
@@ -135,4 +123,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Register;
