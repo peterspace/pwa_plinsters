@@ -13,7 +13,7 @@ const Home = () => {
   const [redirectUrl, setRedirectUrl] = useState("");
   const userIdL = localStorage.getItem("userId")
     ? JSON.parse(localStorage.getItem("userId"))
-    : 1;
+    : null;
   const [userId, setUserId] = useState(userIdL);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState();
