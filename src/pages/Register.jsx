@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 
 const backend = import.meta.env.VITE_BACKEND_URL;
 // const backend = "http://localhost:4000";
+// const backend = "https://dm-wings-server.onrender.com";
 
 const Register = () => {
   const params = useParams();
